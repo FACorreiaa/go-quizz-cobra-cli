@@ -6,7 +6,6 @@ package cmd
 import (
 	"os"
 
-	"github.com/FACorreiaa/go-cobra-CLI/config"
 	"github.com/spf13/cobra"
 )
 
@@ -43,12 +42,6 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	err := config.InitConfig()
-	if err != nil {
-		panic(err)
-	}
-	rootCmd.AddCommand(startCmd)
-	rootCmd.AddCommand(setuserCmd)
 
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

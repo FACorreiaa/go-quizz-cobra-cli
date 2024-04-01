@@ -4,10 +4,18 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
+
+type Ranking struct {
+	UserID   string `json:"user_id"`
+	Username string `json:"username"`
+	Score    int    `json:"score"`
+}
 
 // rankingCmd represents the ranking command
 var rankingCmd = &cobra.Command{
@@ -20,20 +28,33 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ranking called")
+		getRanking()
 	},
+}
+
+func getRanking() {
+	resp, err := http.Get("http://localhost:8080/session/ranking")
+	if err != nil {
+		fmt.Println("Failed to fetch questions:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	var ranking []Ranking
+	err = json.NewDecoder(resp.Body).Decode(&ranking)
+	if err != nil {
+		fmt.Println("Failed to decode JSON response:", err)
+		return
+	}
+
+	// Print the questions
+	for _, r := range ranking {
+		fmt.Println("User", r.Username)
+		fmt.Println("Score:", r.Score)
+
+	}
 }
 
 func init() {
 	rootCmd.AddCommand(rankingCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// rankingCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// rankingCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
