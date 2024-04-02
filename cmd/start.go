@@ -32,11 +32,13 @@ to quickly create a Cobra application.`,
 }
 
 func startSession() {
+	serverAddress := getServerAddress()
+
 	start := time.Now()
 
 	fmt.Println("Session started at:", start)
 
-	resp, err := http.Post("http://localhost:8080/session", "application/json", nil)
+	resp, err := http.Post(serverAddress+"/session", "application/json", nil)
 	if err != nil {
 		log.Fatalln("Failed to start session:", err)
 	}

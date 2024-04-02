@@ -27,7 +27,9 @@ type Question struct {
 }
 
 func getAllQuestions() {
-	resp, err := http.Get("http://localhost:8080/quiz/list")
+	serverAddress := getServerAddress()
+
+	resp, err := http.Get(serverAddress + "/quiz/list")
 	if err != nil {
 		fmt.Println("Failed to fetch questions:", err)
 		return

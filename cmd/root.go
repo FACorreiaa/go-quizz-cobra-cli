@@ -4,8 +4,10 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +28,14 @@ to quickly create a Cobra application.`,
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
+
+func getServerAddress() string {
+	_ = godotenv.Load()
+	host := os.Getenv("DOCKER_ADDR")
+	port := os.Getenv("DOCKER_PORT")
+	return fmt.Sprintf("http://%s:%s", host, port)
+}
+
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
